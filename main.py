@@ -216,7 +216,7 @@ class ConstantsViewer(QWidget):
                 json.dump(self.custom_constants, file)
             QMessageBox.information(self, "Exported", "Custom constants exported successfully.")
         except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
+            QMessageBox.critical(self, "Error", f"An error occurred: {e}")
 
     def import_constants(self):
         # Import custom constants from a JSON file
@@ -228,10 +228,10 @@ class ConstantsViewer(QWidget):
                 self.custom_constants = json.load(file)
             QMessageBox.information(self, "Imported", "Custom constants imported successfully.")
         except Exception as e:
-            QMessageBox.critical(self, "Error", str(e))
+            QMessageBox.critical(self, "Error", f"An error occurred: {e}")
 
     def change_theme(self):
-        # Theme customization dialog
+        # Allow users to choose a theme color
         color = QColorDialog.getColor()
         if color.isValid():
             palette = self.palette()
@@ -239,120 +239,48 @@ class ConstantsViewer(QWidget):
             self.setPalette(palette)
 
     def add_custom_constant(self):
-        # Dialog to add a new custom constant
+        # Dialog to add a custom constant
         dialog = QDialog(self)
         dialog.setWindowTitle("Add Custom Constant")
-        layout = QFormLayout(dialog)
+        form_layout = QFormLayout(dialog)
 
-        constant_name_input = QLineEdit(dialog)
-        constant_value_input = QLineEdit(dialog)
-        constant_desc_input = QLineEdit(dialog)
+        name_input = QLineEdit(dialog)
+        value_input = QLineEdit(dialog)
+        description_input = QLineEdit(dialog)
 
-        layout.addRow("Constant Name:", constant_name_input)
-        layout.addRow("Constant Value:", constant_value_input)
-        layout.addRow("Constant Description:", constant_desc_input)
+        form_layout.addRow("Constant Name:", name_input)
+        form_layout.addRow("Value:", value_input)
+        form_layout.addRow("Description:", description_input)
 
-        button_box = QHBoxLayout()
         add_button = QPushButton("Add", dialog)
-        add_button.clicked.connect(lambda: self.save_custom_constant(dialog, constant_name_input, constant_value_input, constant_desc_input))
-        button_box.addWidget(add_button)
-        layout.addRow(button_box)
+        add_button.clicked.connect(lambda: self.save_custom_constant(dialog, name_input.text(), value_input.text(), description_input.text()))
+        form_layout.addWidget(add_button)
 
-        dialog.setLayout(layout)
+        dialog.setLayout(form_layout)
         dialog.exec_()
 
-    def save_custom_constant(self, dialog, name_input, value_input, desc_input):
-        # Save the new custom constant
-        name = name_input.text()
-        value = value_input.text()
-        description = desc_input.text()
-
-        if not name or not value or not description:
-            QMessageBox.warning(self, "Incomplete Data", "Please provide all fields.")
-            return
-
-        self.custom_constants[name] = {'value': value, 'description': description}
-        dialog.accept()
-        QMessageBox.information(self, "Added", f"Custom constant '{name}' added successfully!")
+    def save_custom_constant(self, dialog, name, value, description):
+        if name and value:
+            self.custom_constants[name] = {'value': value, 'description': description}
+            QMessageBox.information(self, "Success", f"Custom constant '{name}' added.")
+            dialog.accept()
+        else:
+            QMessageBox.warning(self, "Incomplete Data", "Please provide both a name and value for the constant.")
 
     def unit_conversion(self):
-        # Simple unit conversion dialog
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Unit Conversion")
-        layout = QFormLayout(dialog)
-
-        # From and To unit inputs
-        from_unit_input = QLineEdit(dialog)
-        to_unit_input = QLineEdit(dialog)
-        amount_input = QLineEdit(dialog)
-
-        layout.addRow("From Unit:", from_unit_input)
-        layout.addRow("To Unit:", to_unit_input)
-        layout.addRow("Amount:", amount_input)
-
-        convert_button = QPushButton("Convert", dialog)
-        convert_button.clicked.connect(lambda: self.perform_conversion(dialog, from_unit_input, to_unit_input, amount_input))
-        layout.addRow(convert_button)
-
-        dialog.setLayout(layout)
-        dialog.exec_()
-
-    def perform_conversion(self, dialog, from_unit_input, to_unit_input, amount_input):
-        # Dummy conversion logic (for demonstration purposes)
-        try:
-            from_unit = from_unit_input.text()
-            to_unit = to_unit_input.text()
-            amount = float(amount_input.text())
-
-            # Dummy conversion rate
-            conversion_rate = 1.0  # Placeholder
-            result = amount * conversion_rate
-
-            QMessageBox.information(self, "Conversion Result", f"{amount} {from_unit} = {result} {to_unit}")
-        except ValueError:
-            QMessageBox.warning(self, "Invalid Input", "Please enter valid numbers for amount.")
+        # Dummy unit conversion feature
+        QMessageBox.information(self, "Unit Conversion", "This feature is under development.")
 
     def change_language(self):
-        # Change language dialog
-        languages = ["English", "French", "Spanish", "Chinese"]
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Change Language")
-        layout = QVBoxLayout(dialog)
-
-        for language in languages:
-            button = QPushButton(language, dialog)
-            button.clicked.connect(lambda: self.set_language(dialog, language))
-            layout.addWidget(button)
-
-        dialog.setLayout(layout)
-        dialog.exec_()
-
-    def set_language(self, dialog, language):
-        # Set application language (placeholder)
-        QMessageBox.information(self, "Language Changed", f"Language changed to {language}.")
-        dialog.accept()
+        # Dummy change language feature
+        QMessageBox.information(self, "Change Language", "This feature is under development.")
 
     def show_history_graph(self):
-        # Display a graph showing the historical values of a selected constant (dummy implementation)
-        selected_items = self.table.selectedItems()
-        if not selected_items:
-            QMessageBox.warning(self, "No Selection", "Please select a constant to view its history graph.")
-            return
+        # Dummy history graph feature
+        QMessageBox.information(self, "History Graph", "This feature is under development.")
 
-        constant_name = selected_items[0].text()
-        category = self.category_box.currentText()
-        history_data = CONSTANTS[category][constant_name]['history']
-
-        # Dummy graph display (for demonstration purposes)
-        QMessageBox.information(self, "History Graph", f"Showing history graph for {constant_name}: {history_data}")
-
-
-def main():
+if __name__ == '__main__':
     app = QApplication(sys.argv)
     viewer = ConstantsViewer()
     viewer.show()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
