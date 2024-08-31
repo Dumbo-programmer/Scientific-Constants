@@ -6,8 +6,6 @@ This is a Python-based GUI application that allows users to view and explore sci
 
 - **Categorized Constants**: Constants are grouped into categories such as Physics, Chemistry, etc.
 - **Interactive GUI**: Built using PyQt5, the application provides a user-friendly interface.
-- **Constant Details**: View details of each constant, including its value and a brief description.
-- **Error Handling**: Gracefully handles missing data and invalid operations.
 
 ## Requirements
 
